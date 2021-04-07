@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name" translatable="false">alef</string>
+    <string name="error_message">Unable to load image list!</string>
+</resources>
