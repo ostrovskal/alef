@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import android.widget.*
 import com.squareup.picasso.Picasso
 
-class PicAdapter(private val context: Context, private val urls: List<String>, private val notify: (iv: ImageView) -> Unit): BaseAdapter() {
+class PicAdapter(private val context: Context, private val notify: (iv: ImageView) -> Unit): BaseAdapter() {
+
+    // список урлов
+    var urls: List<String>?         = null
+
     // фон миниатюры(кэшируемо)
     private var bkg: ColorDrawable? = null
 
@@ -19,22 +23,24 @@ class PicAdapter(private val context: Context, private val urls: List<String>, p
         return ((convertView ?: ImageView(context)) as? ImageView)?.apply {
             val url = getItem(position)
             tag = url
-            scaleType = ImageView.ScaleType.CENTER_CROP
-            setOnClickListener{ notify(this) }
-            background = bkg
-            val cw = ((parent as? GridView)?.columnWidth ?: 120.dp) - 20.dp
-            layoutParams = AbsListView.LayoutParams(cw, cw)
-            Picasso.with(context)
-                .load(url)
-                .placeholder(android.R.drawable.stat_sys_upload)
-                .error(android.R.drawable.stat_notify_error)
-                .into(this)
+            if(url.isNotEmpty()) {
+                scaleType = ImageView.ScaleType.CENTER_CROP
+                setOnClickListener { notify(this) }
+                background = bkg
+                val cw = ((parent as? GridView)?.columnWidth ?: 120.dp) - 20.dp
+                layoutParams = AbsListView.LayoutParams(cw, cw)
+                Picasso.with(context)
+                    .load(url)
+                    .placeholder(android.R.drawable.stat_sys_upload)
+                    .error(android.R.drawable.stat_notify_error)
+                    .into(this)
+            }
         } ?: error("View is null!")
     }
 
-    override fun getCount() = urls.size
+    override fun getCount() = urls?.size ?: 0
 
-    override fun getItem(position: Int): String = urls[position]
+    override fun getItem(position: Int): String = urls?.run { get(position) } ?: ""
 
     override fun getItemId(position: Int) = position.toLong()
 }

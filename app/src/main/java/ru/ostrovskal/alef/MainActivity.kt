@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                     .placeholder(android.R.drawable.stat_sys_upload)
                     .error(android.R.drawable.stat_notify_error)
                     .into(fimg)
+                it.requestLayout()
             }
             it.adapter = adapt
         }
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             setOnClickListener {
                 visibility = View.GONE
                 grid?.visibility = View.VISIBLE
+                requestLayout()
             }
         }
         try {
@@ -61,12 +63,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                var result = ""
+                val urls = MutableList<String>(0) { "" }
                 try {
-                    result = response.body()?.string() ?: ""
-                    if(result.isNotEmpty()) {
+                    val result = response.body()?.string() ?: ""
+                    if (result.isNotEmpty()) {
                         val resp = "{\"urls\":$result}"
-                        val urls = MutableList<String>(0) { "" }
                         JSONObject(resp).optJSONArray("urls")?.apply {
                             repeat(length()) { urls.add(this.getString(it)) }
                         }
@@ -75,15 +76,15 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: IOException) {
                     "response exception".debug()
                     e.printStackTrace()
-                } catch(j: JSONException) {
+                } catch (j: JSONException) {
                     j.info()
                 }
-                runAction(result.isEmpty())
+                runAction(urls.isEmpty())
             }
 
             fun runAction(err: Boolean) {
                 this@MainActivity.runOnUiThread {
-                    if(err) {
+                    if (err) {
                         terr?.visibility = View.VISIBLE
                         "failure".debug()
                     } else {

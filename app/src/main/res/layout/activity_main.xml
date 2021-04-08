@@ -3,6 +3,14 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
+    <TextView
+        android:id="@+id/errMsg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/error_message"
+        android:gravity="center_vertical|center_horizontal"
+        android:visibility="gone"
+        />
     <ImageView android:id="@+id/fullImage"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
@@ -17,10 +25,11 @@
         android:horizontalSpacing="7dp"
         android:numColumns="2"
         android:stretchMode="spacingWidthUniform"
-        android:background="@color/teal_200"
+        android:background="#ff00a040"
         android:padding="5dp"
         android:layout_margin="5dp"
         android:verticalSpacing="14dp"
+        android:visibility="gone"
         />
 
 </LinearLayout>
